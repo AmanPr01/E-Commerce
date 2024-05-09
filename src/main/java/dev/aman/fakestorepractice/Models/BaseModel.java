@@ -24,3 +24,7 @@ public class BaseModel {
     private boolean isDeleted;   // instead of dropping the whole table, we can use boolean value to check if it is deleted or not.
 
 }
+
+
+
+// We created this class because id, date etc. are common in both the models.

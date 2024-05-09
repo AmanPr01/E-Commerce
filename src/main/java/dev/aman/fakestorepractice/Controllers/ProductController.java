@@ -5,6 +5,7 @@ import dev.aman.fakestorepractice.Models.Product;
 import dev.aman.fakestorepractice.Services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -30,6 +31,7 @@ public class ProductController {
     }
 
     // getting all the products
+    @Cacheable(value = "products")
     @GetMapping("/products")
     public List<Product> getProducts() {
         return productService.getProducts();
