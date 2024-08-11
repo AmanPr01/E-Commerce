@@ -1,6 +1,9 @@
 package dev.aman.fakestorepractice.Controllers;
 
+import dev.aman.fakestorepractice.Commons.AuthenticationCommons;
 import dev.aman.fakestorepractice.DTOs.FakeStoreProductDTO;
+import dev.aman.fakestorepractice.DTOs.UserDTO;
+import dev.aman.fakestorepractice.Exceptions.InvalidTokenException;
 import dev.aman.fakestorepractice.Models.Product;
 import dev.aman.fakestorepractice.Services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +18,30 @@ import java.util.List;
 public class ProductController {
 
     private ProductService productService;
-
     private RestTemplate restTemplate;
+    private AuthenticationCommons authenticationCommons;
 
     @Autowired
-    public ProductController(@Qualifier("selfProductService") ProductService productService, RestTemplate restTemplate) {
+    public ProductController(@Qualifier("productServiceImplFakeStore") ProductService productService,
+                             RestTemplate restTemplate,
+                             AuthenticationCommons authenticationCommons) {
         this.productService = productService;
         this.restTemplate = restTemplate;
+        this.authenticationCommons = authenticationCommons;
     }
 
     // getting single products from productId
-    @GetMapping("/product/{id}")
-    public Product getSingleProduct(@PathVariable("id") Long productId) {
+    @GetMapping("/product/{id}/{token}")
+    public Product getSingleProduct(@PathVariable("id") Long productId, @PathVariable("token") String token) throws InvalidTokenException {
+
+        UserDTO userDTO = authenticationCommons.validateToken(token);
+
+        if (userDTO == null) {
+            // Token is null
+            throw new InvalidTokenException("Invalid token passed. Please login first to get the Product details");
+        }
+
+        // Token is valid, make a call to Product Service to fetch the product.
         return productService.getSingleProduct(productId);
     }
 
