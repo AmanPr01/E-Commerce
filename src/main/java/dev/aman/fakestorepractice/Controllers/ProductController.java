@@ -9,6 +9,7 @@ import dev.aman.fakestorepractice.Services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -22,7 +23,7 @@ public class ProductController {
     private AuthenticationCommons authenticationCommons;
 
     @Autowired
-    public ProductController(@Qualifier("productServiceImplFakeStore") ProductService productService,
+    public ProductController(@Qualifier("selfProductService") ProductService productService,
                              RestTemplate restTemplate,
                              AuthenticationCommons authenticationCommons) {
         this.productService = productService;
@@ -34,12 +35,16 @@ public class ProductController {
     @GetMapping("/product/{id}/{token}")
     public Product getSingleProduct(@PathVariable("id") Long productId, @PathVariable("token") String token) throws InvalidTokenException {
 
-        UserDTO userDTO = authenticationCommons.validateToken(token);
+        // This below commented out section is for UserService
+//        UserDTO userDTO = authenticationCommons.validateToken(token);
+//
+//        if (userDTO == null) {
+//            // Token is null
+//            throw new InvalidTokenException("Invalid token passed. Please login first to get the Product details");
+//        }
 
-        if (userDTO == null) {
-            // Token is null
-            throw new InvalidTokenException("Invalid token passed. Please login first to get the Product details");
-        }
+        // this below is only for testing purpose for testing ServiceDiscovery.
+        UserDTO userDTO = restTemplate.getForObject("http://UserService/users/1", UserDTO.class);
 
         // Token is valid, make a call to Product Service to fetch the product.
         return productService.getSingleProduct(productId);
