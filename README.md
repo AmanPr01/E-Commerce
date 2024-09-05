@@ -108,4 +108,5 @@ The **Product Service** is a core component of the E-Commerce Application, respo
 - **[User Service](https://github.com/AmanPr01/UserService)**: Manages user authentication and authorization.
 - **[Email Service](https://github.com/AmanPr01/EmailService)**: Handles asynchronous email notifications.
 - **[Payment Service](https://github.com/AmanPr01/PaymentService)**: Manages payment processing and transactions.
-   
+- **[Service Discovery](https://github.com/AmanPr01/ServiceDiscovery)**: Central registry for service registration and discovery, enabling dynamic interaction between microservices.
+
